@@ -12,7 +12,7 @@ Notas:
 
 
 def run(values: list, power: int) -> int:
-    if power > len(values) - 1:
+    if power >= len(values):
         result = -1
     else:
         result = values[power] ** power
