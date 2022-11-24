@@ -13,7 +13,6 @@ SHIPS = [
     ["DESTROYER", 2, "~"],
 ]
 player1_ships = ''
-player2_ships = ''
 for i in range(len(SHIPS)):
     ship = input(
         f"Introduce el tipo de barco: CARRIER, BATTLESHIP, CRUISER, SUBMARINE ó DESTROYER"
@@ -31,3 +30,6 @@ for i in range(len(SHIPS)):
         horizontal = 
         while True:
             horizontal
+
+
+player2_ships = ''
