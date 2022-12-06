@@ -8,4 +8,5 @@ Resuelva el ejercicio utilizando listas por comprensión.
 
 def run(x: int, n: int) -> list:
     multiples = [x * i for i in range(1, n + 1)]
+
     return multiples

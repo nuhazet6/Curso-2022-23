@@ -7,13 +7,12 @@ numéricos enteros. Si todos los valores son consecutivos entonces el resultado 
 def run(values: list) -> int:
     target = None
     if len(values) > 0:
-        next_number = values[0]
-    for i in range(len(values)):
-        if values[i] != next_number:
-            target = values[i]
+        consecutive = values[0]
+    for value in values:
+        if value != consecutive:
+            target = value
             break
-        next_number = values[i] + 1
-
+        consecutive += 1
     return target
 
 

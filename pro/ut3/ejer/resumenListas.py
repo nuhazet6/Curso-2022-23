@@ -31,7 +31,7 @@ data.count(
 )  # Devuelve cuántas veces aparece un determinado valor dentro de una lista
 ", ".join(
     data
-)  # convierte una lista en una cadena de texto usando el separador indicado. (solo funciona si todos sus elementos son cadenas de texto)
+)  # convierte una lista en una cadena de texto(string) usando el separador indicado. (solo funciona si todos sus elementos son cadenas de texto)
 sorted(data)  # devuelve una nueva lista ordenada
 data.sort()  # modifica una lista ordenándola
 sorted(data, reverse=True)  # lista ordenada a la inversa

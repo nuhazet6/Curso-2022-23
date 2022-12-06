@@ -6,14 +6,13 @@ persona pasadas a mayúsculas y con punto al final.
 
 def run(fullname: str) -> str:
     fullname = fullname.upper().split(", ")
-    initial_name = fullname[1][0]
+    initials = fullname[1][0] + "."
     surname = fullname[0].split(" ")
-    first_surname = surname[0][0]
-    if len(surname) > 1:
-        second_surname = surname[1][0] + "."
+    first_surname = surname[0][0] + "."
+    if len(surname) == 1:
+        initials += first_surname
     else:
-        second_surname = ""
-    initials = f"{initial_name}.{first_surname}.{second_surname}"
+        initials += first_surname + surname[1][0] + "."
     return initials
 
 
