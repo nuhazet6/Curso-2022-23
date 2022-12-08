@@ -12,6 +12,7 @@ SHIPS = [
     ["SUBMARINE", 3, "¬"],
     ["DESTROYER", 2, "o"],
 ]
+ORIENTATION = ["A", -1, 0, "B", 1, 0, "C", 0, -1, "D", 0, 1]
 ship_size = SHIPS[4][1]
 ship_symbol = SHIPS[4][2]
 while True:
@@ -23,11 +24,15 @@ while True:
     if board_player1[y_coord][x_coord] != "-":
         print("Error. Esa posición está ocupada por un barco")
         continue
+    if not (0 < x_coord < 8) and not (0 < y_coord < 8):
+        print("Error. Esa posición está fuera del tablero")
+        continue
     ship_orientation = input(
-        "Seleccione una orientación, escriba lo indicado a la derecha del igual:\nizquierda = -1,0 \nderecha = 1,0 \nabajo = 0,-1 \narriba = 0,1 \n"
-    ).split(",")
-    ship_x_orientation = int(ship_orientation[0])
-    ship_y_orientation = -(int(ship_orientation[1]))
+        "Seleccione una orientación, escriba lo indicado a la derecha del igual:\nizquierda = A \nderecha = B \nabajo = C \narriba = D \n"
+    ).upper()
+    x_index = ORIENTATION.index(ship_orientation) + 1
+    ship_x_orientation = ORIENTATION[x_index]
+    ship_y_orientation = -(ORIENTATION[x_index] + 1)
     for _ in range(ship_size - 1):
 
         x_coord += ship_x_orientation

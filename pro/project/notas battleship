@@ -1,2 +1,3 @@
 1º comprobar si el barco existe y no ha sido utilizado
 2º comprobar si el barco puede ser colocado (si en la posición no colapsa con otro barco y si no se sale del tablero)
+ship_position[0]
