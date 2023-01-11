@@ -8,8 +8,11 @@ def run(points: str) -> tuple:
 
     PLAYER1 = "A"
     PLAYER2 = "B"
+    IS_TIEBREAK = 6
+    DISTANCE_TO_WIN = 2
     games_player2 = games_player1 = 0
     player_1_points = player_2_points = 0
+    min_point_to_win = 4
     for point in points:
         if point == PLAYER1:
             player_1_points += 1
@@ -20,23 +23,21 @@ def run(points: str) -> tuple:
             break
 
         result_game = player_1_points - player_2_points
-        result_set = games_player1 - games_player2
         # Comprobación de juego de player1
-        if player_1_points >= 4 and result_game >= 2:
+        if player_1_points >= min_point_to_win and result_game >= DISTANCE_TO_WIN:
             games_player1 += 1
             player_1_points = player_2_points = 0
-            # Comprobación de set y tiebreak de player1
-            result_tiebreak = games_player1 == 7 and games_player2 == 6
-            if games_player1 >= 6 and result_set >= 2 or result_tiebreak:
-                break
         # Comprobación de juego de player2
-        elif player_2_points >= 4 and result_game <= -2:
+        elif player_2_points >= min_point_to_win and result_game <= -DISTANCE_TO_WIN:
             games_player2 += 1
             player_1_points = player_2_points = 0
-            # Comprobación de set de player2
-            result_tiebreak = games_player1 == 6 and games_player2 == 7
-            if games_player2 >= 6 and result_set <= -2 or result_tiebreak:
-                break
+
+        # Comprobación de juego tiebreak
+        if player_1_points == player_2_points == 0:
+            if games_player1 == games_player2 == IS_TIEBREAK:
+                min_point_to_win = 7
+            else:
+                min_point_to_win = 4
 
     return games_player1, games_player2
 
