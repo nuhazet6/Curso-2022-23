@@ -21,11 +21,11 @@ def run(points: str) -> tuple:
 
         result_game = player_1_points - player_2_points
         result_set = games_player1 - games_player2
-        # Comprobación de juego de player2
+        # Comprobación de juego de player1
         if player_1_points >= 4 and result_game >= 2:
             games_player1 += 1
             player_1_points = player_2_points = 0
-            # Comprobación de set y tiebreak
+            # Comprobación de set y tiebreak de player1
             result_tiebreak = games_player1 == 7 and games_player2 == 6
             if games_player1 >= 6 and result_set >= 2 or result_tiebreak:
                 break
