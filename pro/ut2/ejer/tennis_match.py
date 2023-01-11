@@ -18,6 +18,7 @@ for point in match:
     if player_A_points >= 4 and result_game >= 2:
         player_A_games += 1
         player_A_points = player_B_points = 0
+
         tiebreak = player_A_games == 7 and player_B_games == 6
         if player_A_games >= 6 and result_set >= 2 or tiebreak:
             player_A_set += 1
@@ -27,6 +28,7 @@ for point in match:
     elif player_B_points >= 4 and result_game <= -2:
         player_B_games += 1
         player_A_points = player_B_points = 0
+        
         tiebreak = player_A_games == 6 and player_B_games == 7
         if player_B_games >= 6 and result_set <= -2 or tiebreak:
             player_B_set += 1
