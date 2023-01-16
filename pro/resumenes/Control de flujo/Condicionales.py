@@ -36,11 +36,11 @@ color = "#FF0000"
 match color:
 
     case "#FF0000":
-        print("🔴")
+        print("red")
     case "#00FF00":
-        print("🟢")
+        print("green")
     case "#0000FF":
-        print("🔵")
+        print("blue")
     case _:
         print("Unknown color")
 
@@ -58,8 +58,21 @@ match point:
     case _:
         print("Unknown")
 
-# Operador morsa
+# Operador morsa-> permite unificar sentencias de asignación dentro de expresiones.
 radius = 4.25
-if (perimeter := 2 * 3.14 * radius) < 100:
+if (
+    perimeter := 2 * 3.14 * radius
+) < 100:  # En este caso, perimeter, a parte de compararlo con si es menor que 100 también almacena el valor de 2*pi*radio
     print("Increase radius to reach minimum perimeter")
     print("Actual perimeter: ", perimeter)
+# Veracidad múltiple: existen dos tipos: all() en la que se tienen que ser todos los valores True para que sea True y any() que solo requiere que un valor sea True para que sea True , requieren una lista con valores booleanos de entrada
+word = "python"
+enough_length = len(word) > 4  # True
+right_beginning = word.startswith("p")  # True
+min_ys = word.count("y") >= 1  # True
+is_cool_word = all([enough_length, right_beginning, min_ys])
+if is_cool_word:
+    print("Cool word!")
+else:
+    print("No thanks")
+# Resultado: Cool word!
