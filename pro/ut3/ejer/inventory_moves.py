@@ -8,8 +8,12 @@ def run(imoves: str) -> dict:
     inventory = {}
     for item in items_list:
         key = item[0]
-        value = int(item[1:])
-        inventory[key] = value
+        amount = int(item[1:])
+        inventory[key] = inventory.get(key, 0) + amount
+        # if key not in inventory:
+        #    inventory[key] = amount
+        # else:
+        #    inventory[key] += amount
     return inventory
 
 

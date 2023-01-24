@@ -4,7 +4,7 @@
 
 
 def run(items: dict) -> dict:
-    fitems = {keys.replace(" ", ""): values for keys, values in items.items()}
+    fitems = {key.replace(" ", ""): values for key, values in items.items()}
     return fitems
 
 
