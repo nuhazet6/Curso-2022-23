@@ -34,6 +34,7 @@ def run(data_path: Path, target_word: str) -> list:
                 general_index += lower_word.find(lower_target)
                 if lower_word.strip(banned_elements) == lower_target:
                     matches.append((row, general_index + spaces))
+                    general_index -= lower_word.find(lower_target)
                 else:
                     general_index += 1
                 general_index += len(word)
