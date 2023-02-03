@@ -24,17 +24,19 @@ def run(data_path: Path, target_word: str) -> list:
         #                target_text = line[original_index + target_len :]
         #                original_index += target_len
 
-        banned_elements = ".,:;()'¡!-"
+        BANNED_ELEMENTS = ".,:;()'¡!-"
         matches = []
         lower_target = target_word.lower()
         for row, line in enumerate(f, start=1):
             general_index = 1
-            for spaces, word in enumerate(line.strip().split()):
+            words = line.strip().split()
+            for spaces, word in enumerate(words):
                 lower_word = word.lower()
-                general_index += lower_word.find(lower_target)
-                if lower_word.strip(banned_elements) == lower_target:
+                target_index = lower_word.find(lower_target)
+                general_index += target_index
+                if lower_word.strip(BANNED_ELEMENTS) == lower_target:
                     matches.append((row, general_index + spaces))
-                    general_index -= lower_word.find(lower_target)
+                    general_index -= target_index
                 else:
                     general_index += 1
                 general_index += len(word)
