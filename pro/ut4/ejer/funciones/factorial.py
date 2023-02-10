@@ -4,7 +4,7 @@
 
 
 def factorial(n):
-    res = 1
-    for n in range(n, 0, -1):
-        res *= n
-    return res
+    result = 1
+    for factor in range(2, n + 1):
+        result *= factor
+    return result
