@@ -1,4 +1,5 @@
 with open("envios.dat", "r") as f:
+    coins = [int(coin)for coin in f.readline().strip().split()]
     clients = []
     codes = set()
     for line, client in enumerate(f):
@@ -19,15 +20,17 @@ print(products)
 
 
 def price(code):
-    info = products.get(code, -1)
-    price = info.values()[0]
+    info = products.get(code, {'ERROR':-1})
+    price = list(info.items()[0])
     return price
 
 
 def stock(code):
-    info = products.get(code, -2)
-    stock = info.values()[1]
+    info = products.get(code, {None:None,'ERROR':-2})
+    stock = list(info.items())[1]
     return stock
+
+stock = stock('a1')
 
 def buy(*,code,amount,money):
     total_price = price(code) * 
