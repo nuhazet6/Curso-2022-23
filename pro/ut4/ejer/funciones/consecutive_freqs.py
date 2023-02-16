@@ -6,9 +6,9 @@
 def cfreq(items, /, as_string=False):
     freqs = []
     if len(items) > 0:
-        amount = 0
+        amount = 1
         previous = items[0]
-        for item in items:
+        for item in items[1:]:
             if item == previous:
                 amount += 1
             else:

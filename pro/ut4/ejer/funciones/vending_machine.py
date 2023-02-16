@@ -18,17 +18,18 @@ with open("stock.dat", "r") as f:
 print(products)
 
 
-def price(*, code):
+def price(code):
     info = products.get(code, -1)
     price = info.values()[0]
     return price
 
 
-def stock(*, code):
+def stock(code):
     info = products.get(code, -2)
     stock = info.values()[1]
     return stock
 
 def buy(*,code,amount,money):
-    total_price = price(code)*
+    total_price = price(code) * 
+
     if price(code = code)
