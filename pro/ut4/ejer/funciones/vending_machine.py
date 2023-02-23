@@ -1,38 +1,43 @@
-with open("envios.dat", "r") as f:
-    coins = [int(coin)for coin in f.readline().strip().split()]
-    clients = []
-    codes = set()
-    for line, client in enumerate(f):
-        info_envio = line.strip().split()
-        code = info_envio[0]
-        amount = int(info_envio[1])
-        money = int(info_envio[2])
-        clients.append((code, amount, money))
-with open("stock.dat", "r") as f:
+with open("vending.dat", "r") as f:
+    TYPE_COIN = [2, 1, 0.5]
+    coins = {
+        type: float(coin) for type, coin in zip(TYPE_COIN, f.readline().strip().split())
+    }
     products = {}
     for line in f:
         info_product = line.strip().split()
         code = info_product[0]
         stock = int(info_product[1])
-        price = int(info_product[2])
+        price = float(info_product[2])
         products[code] = {"stock": stock, "price": price}
-print(products)
+
+with open("operations.dat", "r") as f:
+    orders = []
+    codes = set()
+    for line in f:
+        info_envio = line.strip().split()
+        order_type = info_envio[0]
+        code = info_envio[1]
+        amount = int(info_envio[2])
+        money = [int(i) for i in info_envio[3:]]
+        orders.append((order_type, code, amount, money))
+print(products, coins)
 
 
 def price(code):
-    info = products.get(code, {'ERROR':-1})
+    info = products.get(code, {"ERROR": -1})
     price = list(info.items()[0])
     return price
 
 
 def stock(code):
-    info = products.get(code, {None:None,'ERROR':-2})
+    info = products.get(code, {None: None, "ERROR": -2})
     stock = list(info.items())[1]
     return stock
 
-stock = stock('a1')
 
-def buy(*,code,amount,money):
-    total_price = price(code) * 
+print(stock("D31"))
 
-    if price(code = code)
+
+def buy(*, code, amount, money):
+    return 0
