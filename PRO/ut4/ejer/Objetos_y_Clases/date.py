@@ -23,6 +23,8 @@ class Date:
 
     @property
     def days_in_month(self) -> int:
+        if self.month == 2:
+            return 28 + self.is_leap_year(self.year)
         DAYS_IN_MONTH_ODD_EVEN = [30, 31]
         is_month_second_part = self.month > 7
         if is_month_second_part:
@@ -55,6 +57,18 @@ class Date:
     def __str__(self):
         """martes 2 de septiembre de 2003"""
         pass
+
+    def __sub__(self, other):
+        if self.year > other.year:
+            lower = other
+            upper = self
+        else:
+            lower = self
+            upper = other
+        new_year = upper.year - lower.year
+        new_month = 12 - lower.month + upper.month
+        new_days = lower.days_in_month() - lower.days + upper.days_in_month
+        return
 
     # operador + suma días a la fecha
     # operador - resta días a la fecha o calcula la diferencia entre dos fechas
