@@ -133,13 +133,12 @@ class Date:
                     target_year -=1
 
             new_day = self.day - other
-            if new_day <= 0:
+            if new_day <= 0 and new_year > FIRST_YEAR_VALID:
                 new_day = self.days_in_month(target_year,target_month) + new_day 
                 new_month = target_month
                 if new_month == 12:
                     new_year = target_year
-
-        return Date(new_day,new_month,new_year)
+            return Date(new_day,new_month,new_year)
 
     def __eq__(self, other) -> bool:
         are_years_eq = self.year == other.year
@@ -180,18 +179,19 @@ class Date:
     # operador < dice si una fecha es menor que otra
 
 
-fecha1 = Date(1, 1, 1905)
+fecha1 = Date(1, 1, 1904)
 print(fecha1)
-fecha2 = Date(31, 2, 1900)
+fecha2 = Date(1, 2, 1903)
 print(fecha2)
-fecha4 = Date(30, 1, 1901)
+fecha4 = Date(9999, 9999, 99999)
+print(fecha4)
 print(Date.is_leap_year(fecha1.year), Date.is_leap_year(fecha2.year))
 print(fecha1.delta_days(),fecha2.delta_days())
 print(fecha1 - fecha2)
-fecha3 = fecha1 + 366
+fecha3 = fecha1 + 365
 print(fecha3)
 print(fecha1.weekday())
-print(fecha1 - 367)
+print(fecha1 - 365)
 print(fecha2 > fecha4)
 print(fecha2 >= fecha4)
 print(fecha2 < fecha4)
