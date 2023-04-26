@@ -3,15 +3,10 @@
 # ******************
 class Fibonacci:
     def __init__(self, fibonacci_amount: int):
-        self.fibonacci_nums = []
-        number1 = 0
-        number2 = 1
-        for _ in range(fibonacci_amount):
-            self.fibonacci_nums.append(number1)
-            number1_old = number1
-            number1 = number2
-            number2 += number1_old
-        self.fibonacci_amount = fibonacci_amount
+        self.fibonacci = []
+        self.number1 = 0
+        self.number2 = 1
+        self.num_fibonacci = fibonacci_amount
         self.pointer = 0
 
     def __iter__(self):
@@ -20,12 +15,16 @@ class Fibonacci:
 
     def __next__(self):
         # Protocolo de iteración
-        if self.pointer >= self.fibonacci_amount:
+        if self.pointer >= self.num_fibonacci:
             raise StopIteration
-        droid = self.fibonacci_nums[self.pointer]
+        result = self.number1
+        number1_old = self.number1
+        self.number1 = self.number2
+        self.number2 += number1_old
         self.pointer += 1
-        return droid
+        return result
 
 
 def run(n: int):
     return list(Fibonacci(n))
+print(list(Fibonacci(6)))
