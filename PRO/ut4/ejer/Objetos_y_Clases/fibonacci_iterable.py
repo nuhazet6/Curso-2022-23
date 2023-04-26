@@ -3,7 +3,6 @@
 # ******************
 class Fibonacci:
     def __init__(self, fibonacci_amount: int):
-        self.fibonacci = []
         self.number1 = 0
         self.number2 = 1
         self.num_fibonacci = fibonacci_amount
@@ -18,13 +17,14 @@ class Fibonacci:
         if self.pointer >= self.num_fibonacci:
             raise StopIteration
         result = self.number1
-        number1_old = self.number1
         self.number1 = self.number2
-        self.number2 += number1_old
+        self.number2 += result
         self.pointer += 1
         return result
 
 
 def run(n: int):
     return list(Fibonacci(n))
-print(list(Fibonacci(6)))
+
+
+fibonacci = Fibonacci(4)
