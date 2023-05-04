@@ -1,9 +1,12 @@
 class DNA:
-    VALID_BASES = "ATCG"
     ADENINE = "A"
     THYMINE = "T"
     CYTOSINE = "C"
     GUANINE = "G"
+    VALID_BASES = ADENINE + THYMINE + CYTOSINE + GUANINE
+
+    def __init__(self, sequence: str):
+        self.sequence = sequence.upper()
 
     @property
     def adenines(self):
@@ -20,9 +23,6 @@ class DNA:
     @property
     def guanines(self):
         return self.sequence.count(DNA.GUANINE)
-
-    def __init__(self, sequence: str):
-        self.sequence = sequence.upper()
 
     def __str__(self) -> str:
         return self.sequence
@@ -59,8 +59,11 @@ class DNA:
 
     def __setitem__(self, index, base):
         result = list(self.sequence)
-        result[index] = base if base in DNA.VALID_BASES else "A"
+        result[index] = base if base in DNA.VALID_BASES else DNA.ADENINE
         self.sequence = "".join(result)
+
+    def __getitem__(self, index):
+        return self.sequence[index]
 
     @classmethod
     def build_from_file(cls, path):
