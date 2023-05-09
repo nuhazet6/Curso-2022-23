@@ -8,8 +8,10 @@ class IntegerStack:
 
     def push(self, item: int) -> bool:
         """Si la pila está llena retornar False, en otro caso retornar True"""
-        self.items.insert(0, item) if (is_full := self.max_size > len(self)) else ...
-        return is_full
+        if self.is_full():
+            return False
+        self.items.insert(0, item)
+        return True
 
     def pop(self) -> int:
         """Extraer el elemento que está en el TOP de la pila"""
@@ -17,7 +19,7 @@ class IntegerStack:
 
     def top(self) -> int:
         """Devolver el elemento que está en el TOP de la pila (sin extracción)"""
-        return self.items[0]
+        return self[0]
 
     def is_empty(self) -> bool:
         """Indica si la pila está vacía"""
@@ -25,7 +27,7 @@ class IntegerStack:
 
     def is_full(self) -> bool:
         """Indica si la pila está llena -> max_size"""
-        return self.max_size <= len(self)
+        return len(self) >= self.max_size
 
     def expand(self, factor: int = 2) -> None:
         """Expande el tamaño máximo de la pila en el factor indicado"""
