@@ -32,7 +32,6 @@ class IntegerStack:
     def expand(self, factor: int = 2) -> None:
         """Expande el tamaño máximo de la pila en el factor indicado"""
         self.max_size *= factor
-        return None
 
     def dump_to_file(self, path: str) -> None:
         """Vuelca la pila a un fichero. Cada item en una línea"""
@@ -48,7 +47,7 @@ class IntegerStack:
             for item in f:
                 if new_stack.is_full():
                     new_stack.expand()
-                new_stack.items.insert(len(new_stack), int(item))
+                new_stack.items.append(int(item))
             return new_stack
 
     def __getitem__(self, index: int) -> int:
@@ -65,7 +64,7 @@ class IntegerStack:
 
     def __str__(self):
         """Cada elemento en una línea distinta empezando por el TOP de la pila"""
-        return "".join(str(item) + "\n" for item in self.items).strip()
+        return "\n".join(str(item) for item in self.items)
 
     def __add__(self, other: IntegerStack) -> IntegerStack:
         """La segunda pila va "encima" de la primera"""
@@ -73,6 +72,7 @@ class IntegerStack:
         new_stack = IntegerStack(max_size=new_size)
         new_stack.items = other.items
         new_stack.items.extend(self.items)
+
         return new_stack
 
     def __iter__(self) -> IntegerStackIterator:
@@ -81,9 +81,9 @@ class IntegerStack:
 
 class IntegerStackIterator:
     def __init__(self, stack: IntegerStack):
-        self.num_items = len(stack)
-        self.pointer = 0
+        self.num_items = len(stack)        
         self.items = stack.items
+        self.pointer = 0
 
     def __next__(self) -> int:
         if self.pointer >= self.num_items:
