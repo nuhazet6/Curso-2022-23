@@ -8,8 +8,8 @@ def load_card_glyphs(path: str = "cards.dat") -> dict[str, str]:
     with open(path, "r") as f:
         deck = {}
         for line in f:
-            suit, glyph = line.strip().replace(',','').split(":")
-            deck[suit] = glyph
+            suit, glyphs = line.strip().replace(',','').split(":")
+            deck[suit] = glyphs
         return deck
 
 
@@ -19,7 +19,7 @@ class Card:
     HEARTS = "❤"
     SPADES = "♠"
     #           1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13
-    SYMBOLS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"] # list + index?
+    SYMBOL_VALUE = {"A":1, "2":2, "3":3, "4":4, "5":5, "6":6, "7":7, "8":8, "9":9, "10":10, "J":11, "Q":12, "K":13} # list + index?
     A_VALUE = 1
     K_VALUE = 13
     GLYPHS = load_card_glyphs()
@@ -40,23 +40,31 @@ class Card:
         if suit not in Card.get_available_suits():
             raise InvalidCardError(f"{repr(suit)} is not a supported suit")
         if isinstance(value, int):
-            if len(Card.SYMBOLS) < value or value < 1 :
+            if len(Card.SYMBOL_VALUE) < value or value < 1 :
                 raise InvalidCardError(f"{repr(value)} is not a supported value")
             self.value = value
         elif isinstance(value,str):
-            if value not in Card.SYMBOLS:
+            if value not in Card.SYMBOL_VALUE:
                 raise InvalidCardError(f"{repr(value)} is not a supported symbol")
-            self.value = Card.SYMBOLS.index(value)   
-        else:
-            raise InvalidCardError()    
+            self.value = Card.SYMBOL_VALUE[value]  
         self.suit = suit
         # self.value = Card.SYMBOLS_VALUES.get(str(value),value)
-
+    @property
+    def value(self):
+        return self.__value
+    
+    @value.setter
+    def value(self,value):
+        self.__value = value
+        self.__cmp_value = None
+    
     @property
     def cmp_value(self) -> int:
         """Devuelve el valor (numérico) de la carta para comparar con otras.
         Tener en cuenta el AS."""
-        return self.value if self.value > 1 else 14
+        if self.__cmp_value is None:
+            self.__cmp_value = self.value if self.value > 1 else 14
+        return self.__cmp_value
 
     def __repr__(self):
         """Devuelve el glifo de la carta"""
@@ -107,21 +115,19 @@ class InvalidCardError(Exception):
     """Clase que representa un error de carta inválida.
     - El mensaje por defecto de esta excepción debe ser: 🃏 Invalid card
     - Si se añaden otros mensajes aparecerán como: 🃏 Invalid card: El mensaje que sea"""
-
-    def __init__(self, message=None):
-        if message is None:
-            self.message = "🃏 Invalid card"
-        else:
-            self.message = "🃏 Invalid card: " + message
+    def __init__(self, message=''):
+        self.message = "🃏 Invalid card" 
+        if message:
+            self.message += f': {message}'
         super().__init__(self.message)
 
 output = load_card_glyphs()
 #deck = [i for i in ''.join(output.values())]
 suffled_deck = []
 for i in ''.join(output.values()):
-    index = random.randint(0, len(suffled_deck)) #En este caso no es necesario poner - 1 dado que el índice lo vamos a usar únicamente en insert.
+    index = random.randint(0, len(suffled_deck)) 
     suffled_deck.insert(index,i)
 print(suffled_deck)
-card1 = Card(8,Card.CLUBS)
-cmp = card1 == 9
-print(cmp)
+# print(list(Card.get_cards_by_suit(Card.CLUBS)))
+# # card1 = Card(10,Card.CLUBS)
+# # print(card1 == 3)
