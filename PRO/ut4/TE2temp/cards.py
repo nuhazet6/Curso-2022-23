@@ -59,27 +59,51 @@ class Deck:
     def __len__(self):
         return len(self.deck)
     
-    def deal_random_card(self):
+    def deal_random_card(self,amount:int=1) -> Card:
         rand_index = helpers.randint(0,len(self))
         return self.deck.pop(rand_index)
 
-    def deal_top_card(self):
-        return self.deck.pop(0)
 
-    def deal_bot_card(self):
-        return self.deck.pop()
+    def deal_top_cards(self,amount):#¿Hacer cards y devolver una lista?
+        return [self.deck.pop(0) for _ in range(amount)]
+
+    def deal_bot_cards(self,amount):
+        return [self.deck.pop() for _ in range(amount)]
     
     def shuffle(self):
         helpers.shuffle(self.deck)
     
 class Hand:
+
     def __init__(self,deck):
         HAND_SIZE = 5
-        self.cards = []
-        for _ in range(HAND_SIZE):
-            self.cards.append(deck.deal_top_card())
+        self.cards = deck.deal_top_cards(HAND_SIZE)
+        # for _ in range(HAND_SIZE):#Usar con cards y ahorrar el bucle?
+        #     self.cards.append(deck.deal_top_card())
 
+    def declare_hand(self,player_cards):
+        POSSIBLE_HANDS = [self.is_royal_stair,]
+
+    def is_royal_stair(self,player_cards):
+        return False
+    
+    def is_straight_flush(self,player_cards):
+        return False
+    
+    def is_quads(self,player_cards):
+        player_values = [card.value for card in player_cards]
+        card_values = player_values.copy()
+        for card in self.cards: #Se puede poner hand_values como property
+            card_values.append(card.value)
+        for value in card_values:
+            if card_values.count(value) == 4 and value in player_values: 
+                return True 
+        return False
+    
 
 
 dck = Deck()
 print(dck, len(dck.deck))
+dck.deal_top_cards(52)
+print(dck, len(dck.deck))
+card1 = [Card(5,Card.CLUBS),Card(5,Card.SPADES),Card(5,Card.HEARTS),Card(5,Card.DIAMONDS)]
