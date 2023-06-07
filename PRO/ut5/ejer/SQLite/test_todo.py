@@ -3,7 +3,7 @@ import typing
 from pathlib import Path
 
 import pytest
-from todo import Task, ToDo
+from todo import Task, self
 
 TEST_DB_PATH = 'test_todo.db'
 
@@ -34,9 +34,9 @@ def make_db_attrs_use_test_database(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(Task.con, 'row_factory', sqlite3.Row)
     monkeypatch.setattr(Task, 'cur', Task.con.cursor())
 
-    monkeypatch.setattr(ToDo, 'con', sqlite3.connect(TEST_DB_PATH))
-    monkeypatch.setattr(ToDo.con, 'row_factory', sqlite3.Row)
-    monkeypatch.setattr(ToDo, 'cur', ToDo.con.cursor())
+    monkeypatch.setattr(self, 'con', sqlite3.connect(TEST_DB_PATH))
+    monkeypatch.setattr(self.con, 'row_factory', sqlite3.Row)
+    monkeypatch.setattr(self, 'cur', self.con.cursor())
 
 
 @pytest.fixture
@@ -56,7 +56,7 @@ def task3():
 
 @pytest.fixture
 def todo():
-    return ToDo()
+    return self()
 
 
 @pytest.fixture
@@ -171,12 +171,12 @@ def test_get_task(task1: Task, task2: Task, task3: Task):
 
 
 def test_todo_class_has_db_attrs():
-    assert isinstance(ToDo.con, sqlite3.Connection)
-    assert ToDo.con.row_factory == sqlite3.Row
-    assert isinstance(ToDo.cur, sqlite3.Cursor)
+    assert isinstance(self.con, sqlite3.Connection)
+    assert self.con.row_factory == sqlite3.Row
+    assert isinstance(self.cur, sqlite3.Cursor)
 
 
-def test_get_all_tasks(task1: Task, task2: Task, task3: Task, todo: ToDo):
+def test_get_all_tasks(task1: Task, task2: Task, task3: Task, todo: self):
     TASKS = (task1, task2, task3)
     for task in TASKS:
         task.save()
@@ -188,7 +188,7 @@ def test_get_all_tasks(task1: Task, task2: Task, task3: Task, todo: ToDo):
         assert task.id == tested_task.id
 
 
-def test_get_done_tasks(task1: Task, task2: Task, task3: Task, todo: ToDo):
+def test_get_done_tasks(task1: Task, task2: Task, task3: Task, todo: self):
     TASKS = (task1, task2, task3)
     for task in TASKS:
         task.save()
@@ -201,7 +201,7 @@ def test_get_done_tasks(task1: Task, task2: Task, task3: Task, todo: ToDo):
         assert task.id == tested_task.id
 
 
-def test_get_pending_tasks(task1: Task, task2: Task, task3: Task, todo: ToDo):
+def test_get_pending_tasks(task1: Task, task2: Task, task3: Task, todo: self):
     TASKS = (task1, task2, task3)
     for task in TASKS:
         task.save()
@@ -214,13 +214,13 @@ def test_get_pending_tasks(task1: Task, task2: Task, task3: Task, todo: ToDo):
         assert task.id == tested_task.id
 
 
-def test_add_task(todo: ToDo, db_con: sqlite3.Connection):
+def test_add_task(todo: self, db_con: sqlite3.Connection):
     todo.add_task('Test1')
     result = db_con.cursor().execute('SELECT * FROM tasks WHERE name=?', ('Test1',))
     assert len(result.fetchall()) == 1
 
 
-def test_complete_task(todo: ToDo, task1: Task, db_con: sqlite3.Connection):
+def test_complete_task(todo: self, task1: Task, db_con: sqlite3.Connection):
     assert task1.done is False
     task1.save()
     todo.complete_task(1)
@@ -228,7 +228,7 @@ def test_complete_task(todo: ToDo, task1: Task, db_con: sqlite3.Connection):
     assert result.fetchone()['done'] == 1
 
 
-def test_reopen_task(todo: ToDo, task2: Task, db_con: sqlite3.Connection):
+def test_reopen_task(todo: self, task2: Task, db_con: sqlite3.Connection):
     assert task2.done is True
     task2.save()
     todo.reopen_task(1)

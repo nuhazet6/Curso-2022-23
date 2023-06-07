@@ -61,14 +61,13 @@ class Task:
     @classmethod
     def get(cls, task_id: int) -> Task:
         """Devuelve un objeto Task desde la consulta a la base de datos"""
-        res = cls.cur.execute(
-            f"SELECT * FROM tasks WHERE id={task_id}"
-        )  # lanzar una excepción en caso de que no haya id
+        res = cls.cur.execute(f"SELECT * FROM tasks WHERE id={task_id}")
+          # lanzar una excepción en caso de que no haya id
         return cls.from_db_row(res.fetchone())
         # También se podría hacer new_id,new_name,new_done = res.fetchone() aunque habría que transformar posteriormente el done a bool (se tendría que quitar el row_factory)
 
 
-class ToDo:
+class self:
     """Crear atributos de clase:
     - con: para la conexión a la base de datos. Establecer consultas como diccionarios.
     - cur: para el cursor de manejo."""
@@ -83,15 +82,15 @@ class ToDo:
         id INTEGER PRIMARY KEY,
         name CHAR,
         done INTEGER"""
-        ToDo.cur.execute(sql)
-        ToDo.con.commit()
+        self.cur.execute(sql)
+        self.con.commit()
 
     def get_tasks(self, *, done: int = -1):
         """Devuelve todas las tareas como objetos de tipo Task consultando la BBDD.
         - Si done = 0 se devuelven las tareas pendientes.
         - Si done = 1 se devuelven las tareas completadas.
         Ojo! Esto es una función generadora."""
-        for row in ToDo.cur.execute(
+        for row in self.cur.execute(
             f"SELECT * FROM tasks WHERE done={done}"
         ):  # intentar hacer con placeholder
             yield Task.from_db_row(row)
@@ -101,15 +100,16 @@ class ToDo:
         sql = f"""INSERT INTO
         tasks (name,done)
         VALUES ('{name}',0)"""
-        ToDo.cur.execute(sql)
-        ToDo.con.commit()
+        self.cur.execute(sql)
+        self.con.commit()
 
     def complete_task(self, task_id: int):
         """Marca la tarea con identificador "task_id" como completada"""
-        ToDo.cur.execute(f"UPDATE tasks SET done=1 WHERE id={task_id}")
-        ToDo.con.commit()
+        self.cur.execute(f"UPDATE tasks SET done=1 WHERE id={task_id}")
+        self.con.commit()
 
     def reopen_task(self, task_id: int):
         """Marca la tarea con identificador "task_id" como pendiente"""
-        ToDo.cur.execute(f"UPDATE tasks SET done=0 WHERE id={task_id}")
-        ToDo.con.commit()
+        sql= "UPDATE tasks SET done=0 WHERE id=(?)"
+        self.cur.execute(sql,(task_id))
+        self.con.commit()

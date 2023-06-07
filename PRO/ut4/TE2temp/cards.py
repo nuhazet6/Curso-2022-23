@@ -82,22 +82,30 @@ class Hand:
         #     self.cards.append(deck.deal_top_card())
 
     def declare_hand(self,player_cards):
-        POSSIBLE_HANDS = [self.is_royal_stair,]
+        player_values = [card.cmp_value for card in player_cards]
+        higher_player_value = max(player_values)
+        HANDS_VALUES = [self.is_royal_stair(player_values,higher_player_value),                
+        self.is_straight_flush(player_values,higher_player_value),
+        self.is_quads(player_values,higher_player_value)]
+        for hand in HANDS_VALUES:
+            if hand:
+                hand_global_value = len(HANDS_VALUES)-HANDS_VALUES.index(hand)
+                hand_value = f'{hand_global_value}.{hand}'
+                return float(hand_value)
 
-    def is_royal_stair(self,player_cards):
+    def is_royal_stair(self,player_values,higher_player_value):
         return False
     
-    def is_straight_flush(self,player_cards):
+    def is_straight_flush(self,player_values,higher_player_value):
         return False
     
-    def is_quads(self,player_cards):
-        player_values = [card.value for card in player_cards]
+    def is_quads(self,player_values,higher_player_value):
         card_values = player_values.copy()
-        for card in self.cards: #Se puede poner hand_values como property
+        for card in self.cards: #Se puede poner hand_values como property ¿y cachearla?
             card_values.append(card.value)
         for value in card_values:
             if card_values.count(value) == 4 and value in player_values: 
-                return True 
+                return f'{value}{higher_player_value:0d}'
         return False
     
 
@@ -106,4 +114,6 @@ dck = Deck()
 print(dck, len(dck.deck))
 dck.deal_top_cards(52)
 print(dck, len(dck.deck))
-card1 = [Card(5,Card.CLUBS),Card(5,Card.SPADES),Card(5,Card.HEARTS),Card(5,Card.DIAMONDS)]
+dck.deck = [Card(5,Card.CLUBS),Card(5,Card.SPADES),Card(5,Card.HEARTS),Card(4,Card.DIAMONDS),Card(6,Card.DIAMONDS)]
+hand1 = Hand(dck)
+print(hand1.declare_hand([Card(5,Card.DIAMONDS),Card(1,Card.DIAMONDS)]))
