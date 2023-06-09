@@ -13,7 +13,7 @@ class Player:
         self.hole_cards = []
         self.community_cards = []
 
-    # cachear? solo se usa una vez, incluso se podría tratar como método dado que lo que devuelve se guarda en otra variable.
+    # cachear
     @property
     def best_hand(self) -> cards.Hand:
         card_combinations = helpers.combinations(
