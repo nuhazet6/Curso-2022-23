@@ -7,11 +7,12 @@ player_sample = ("Luis", "Marta", "Juan")
 
 if __name__ == "__main__":
     deck = cards.Deck()
-    print(deck)
     common_cards = [deck.deal_top_card() for _ in range(5)]
     private_cards = [[deck.deal_top_card(),
-                      deck.deal_top_card()] for player in player_sample]
-    players = [roles.Player(name) for name in player_sample]
-    table_1 = game.Game(players, common_cards, private_cards)
-    winner_player, winner_hand = table_1.play_round(show_info=True)
+                      deck.deal_top_card()] for _ in player_sample]
+    players = [roles.Player(player_name) for player_name in player_sample]
+    winner_player, winner_hand = game.get_winner(players, common_cards,
+                                                 private_cards)
+    print(private_cards)
+    print(common_cards)
     print(winner_player, winner_hand)

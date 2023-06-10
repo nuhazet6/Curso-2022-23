@@ -4,19 +4,19 @@ import helpers
 SUITS = dict(clubs="♣", diamonds="◆", hearts="❤", spades="♠")
 
 SYMBOL_VALUE = {
-    '2': 2,
-    '3': 3,
-    '4': 4,
-    '5': 5,
-    '6': 6,
-    '7': 7,
-    '8': 8,
-    '9': 9,
-    '10': 10,
-    'J': 11,
-    'Q': 12,
-    'K': 13,
-    'A': 14
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8,
+    "9": 9,
+    "10": 10,
+    "J": 11,
+    "Q": 12,
+    "K": 13,
+    "A": 14,
 }
 
 
@@ -32,9 +32,9 @@ class Card:
 
     @property
     def is_ace(self) -> bool:
-        return self.rank == 12
+        return self.symbol == 'A'
 
-    def __str__(self):
+    def __repr__(self):
         return f"{self.symbol}{self.suit}"
 
     @helpers.type_control
@@ -52,7 +52,7 @@ class Deck:
         self.cards = []
         for suit in SUITS:
             for symbol in SYMBOL_VALUE:
-                self.cards.append(Card(f'{symbol}{SUITS[suit]}'))
+                self.cards.append(Card(f"{symbol}{SUITS[suit]}"))
         self.shuffle()
 
     @staticmethod
@@ -96,6 +96,7 @@ class Deck:
     def __len__(self):
         return len(self.cards)
 
+    @check_empty
     def __getitem__(self, index: int):
         return self.cards[index]
 
@@ -112,25 +113,12 @@ class Hand:
     ONE_PAIR = 2
     HIGH_CARD = 1
 
-    # RANKINGS = dict(
-    #     royal_flush=9,
-    #     straight_flush=8,
-    #     four_of_a_kind=7,
-    #     full_house=6,
-    #     flush=5,
-    #     straight=4,
-    #     three_of_a_kind=3,
-    #     two_pair=2,
-    #     pair=1,
-    #     high_card=0,
-    # )
-
     def __init__(self, *cards: Card):
         self.cards = sorted(cards, reverse=True)
         self._cat = None
         self._cat_rank = None
 
-    def __str__(self):
+    def __repr__(self):
         return "".join(str(card) for card in self.cards)
 
     def __len__(self):
@@ -139,24 +127,10 @@ class Hand:
     @helpers.type_control
     def __gt__(self, other):
         if self.cat == other.cat:
-            if isinstance(self.cat_rank, tuple):
-                self_cat_rank = SYMBOL_VALUE[self.cat_rank[0]]
-                self_second_rank = SYMBOL_VALUE[self.cat_rank[1]]
-                other_cat_rank = SYMBOL_VALUE[other.cat_rank[0]]
-                other_second_rank = SYMBOL_VALUE[other.cat_rank[1]]
-            else:
-                self_cat_rank = SYMBOL_VALUE[self.cat_rank]
-                other_cat_rank = SYMBOL_VALUE[other.cat_rank]
-                self_second_rank = 0
-                other_second_rank = 0
-            if self.cat_rank == other.cat_rank:
-                for card1, card2 in zip(self.cards, other.cards):
-                    if card1 == card2:
-                        continue
-                    return card1 > card2  #Que una mano tenga una carta mayor no indica que sea mayor, a lo mejor esa carta no tiene relación con el ranking
-            return self_cat_rank > other_cat_rank or (
-                self_cat_rank == other_cat_rank
-                and self_second_rank > other_second_rank)
+            for card1, card2 in zip(self.cards, other.cards):
+                if card1 == card2:
+                    continue
+                return card1 > card2
         return self.cat > other.cat
 
     @helpers.type_control
@@ -169,8 +143,14 @@ class Hand:
                 return True
             return False
 
+    @helpers.type_control
     def __lt__(self, other):
-        return not (self > other)
+        if self.cat == other.cat:
+            for card1, card2 in zip(self.cards, other.cards):
+                if card1 == card2:
+                    continue
+                return card1 < card2
+        return self.cat < other.cat
 
     def __getitem__(self, index: int):
         return self.cards[index]
@@ -181,14 +161,11 @@ class Hand:
         rank_repetitions = []
         symbol_repetition = []
         repetition_count = 1
+
         for card1, card2 in zip(self.cards, self.cards[1:]):
             if card1.suit != card2.suit:
                 is_flush = False
-            if card1.is_ace:
-                # An ace can make a straight on both ends, rank3='5' and rank11='K'
-                if card2.rank not in (3, 11):
-                    is_straight = False
-            elif card1.rank != card2.rank + 1:
+            if card1.rank != card2.rank + 1:
                 is_straight = False
             if card1.rank == card2.rank:
                 repetition_count += 1
@@ -199,7 +176,6 @@ class Hand:
         if repetition_count > 1:
             rank_repetitions.append(repetition_count)
             symbol_repetition.append(card1.symbol)
-        # Now a rank is assigned using the information extracted
         cat_rank = self[0].symbol
         if self[0].is_ace and is_flush and is_straight:
             cat = self.ROYAL_FLUSH
@@ -207,12 +183,14 @@ class Hand:
             cat = self.STRAIGHT_FLUSH
         elif rank_repetitions == [4]:
             cat = self.FOUR_OF_A_KIND
+            cat_rank = symbol_repetition[0]
         elif rank_repetitions == [3, 2]:
             cat = self.FULL_HOUSE
-            cat_rank = self.cards[1].symbol, self.cards[3].symbol
+            cat_rank = symbol_repetition[0], symbol_repetition[1]
         elif rank_repetitions == [2, 3]:
             cat = self.FULL_HOUSE
-            cat_rank = self.cards[3].symbol, self.cards[1].symbol
+            cat_rank = symbol_repetition[1], symbol_repetition[0]
+            self.cards = self.cards[2:] + self.cards[0:2]
         elif is_flush:
             cat = self.FLUSH
         elif is_straight:
@@ -222,12 +200,25 @@ class Hand:
             cat_rank = symbol_repetition[0]
         elif rank_repetitions == [2, 2]:
             cat = self.TWO_PAIR
-            cat_rank = self.cards[1].symbol, self.cards[3].symbol
+            cat_rank = symbol_repetition[0], symbol_repetition[1]
+            if self[0].symbol != symbol_repetition[0]:
+                self.cards = self.cards[1:] + [self.cards[0]]
+            elif self[2].symbol != symbol_repetition[1]:
+                self.cards = self.cards[0:2] + self.cards[3:] + [self.cards[2]]
         elif rank_repetitions == [2]:
             cat = self.ONE_PAIR
             cat_rank = symbol_repetition[0]
         else:
             cat = self.HIGH_CARD
+        if len(rank_repetitions) == 1:
+            #Bloque para ordenar la mano en caso de pareja, trío o póquer
+            card_index = [card.symbol
+                          for card in self.cards].index(symbol_repetition[0])
+            last_index = card_index + rank_repetitions[0]
+            cards = self.cards[
+                card_index:last_index] + self.cards[:card_index] + self.cards[
+                    last_index:]
+            self.cards = cards
         return cat, cat_rank
 
     @property
