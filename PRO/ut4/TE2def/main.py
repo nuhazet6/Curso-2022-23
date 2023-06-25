@@ -3,7 +3,7 @@ import cards
 import game
 import roles
 
-player_sample = ("Luis", "Marta", "Juan")
+player_sample = ("Andrés", "Franco", "Carlos", "Yeli", "Nuhazet")
 
 if __name__ == "__main__":
     deck = cards.Deck()
@@ -15,4 +15,5 @@ if __name__ == "__main__":
                                                  private_cards)
     print(private_cards)
     print(common_cards)
-    print(winner_player, winner_hand)
+    win_message = 'Ha ganado'
+    print(win_message, winner_player, winner_hand)
