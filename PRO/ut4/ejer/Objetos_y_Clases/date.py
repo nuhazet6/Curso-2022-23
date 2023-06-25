@@ -101,7 +101,7 @@ class Date:
         """Sumar un número de días a la fecha"""
         new_year = self.year
         new_month = self.month
-        new_day = self.day
+        new_day = self.day 
 
         # leap_year = self.year
         # if self.month > 2:
